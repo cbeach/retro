@@ -1,14 +1,27 @@
+**Status:** Maintenance (expect bug fixes and minor updates)
+
 # Gym Retro
 
 Gym Retro is a wrapper for video game emulator cores using the Libretro API to turn them into Gym environments.
 It includes support for several classic game consoles and a dataset of different games.
-It runs on Linux, macOS and Windows with Python 3.5, 3.6 and 3.7 support.
+
+Supported platforms:
+
+- Windows
+- macOS 10.12 (Sierra), 10.13 (High Sierra), 10.14 (Mojave)
+- Linux
+
+Supported Pythons:
+
+- 3.5
+- 3.6
+- 3.7
 
 Each game has files listing memory locations for in-game variables, reward functions based on those variables, episode end conditions, savestates at the beginning of levels and a file containing hashes of ROMs that work with these files.
 Please note that ROMs are not included and you must obtain them yourself.
 Most ROM hashes are sourced from their respective No-Intro SHA-1 sums.
 
-Supported systems:
+Supported emulated systems:
 
 - Atari
 	- Atari2600 (via Stella)
@@ -28,30 +41,106 @@ See [LICENSES.md](LICENSES.md) for information on the licenses of the individual
 
 # Installation
 
-Gym Retro requires Python 3.5 or 3.6. Please make sure to install the appropriate distribution for your OS beforehand. Please note that due to compatibility issues with some of the cores 32-bit operating systems are not supported.
-
-## Extra Prerequesites
-
-Building Gym Retro requires at least either gcc 5 or clang 3.4.
-
-If you are on macOS, you need 10.11 or newer.
-Also, since LuaJIT does not work properly on macOS you must first install Lua 5.1 from homebrew:
-
-```sh
-brew install pkg-config lua@5.1
-```
-
-## Install from binary
+Gym Retro requires one of the supported versions of Python. Please make sure to install the appropriate distribution for your OS beforehand. Please note that due to compatibility issues with some of the cores, 32-bit operating systems are not supported.
 
 ```sh
 pip3 install gym-retro
 ```
 
-## Install from source
+See the section [Install Retro from source](#install-retro-from-source) if you want to build gym-retro yourself (this is generally not necessary).
+
+# Use With Gym
+
+```python
+import retro
+env = retro.make(game='AirStriker-Genesis')
+```
+
+# Environments
+
+What environments are there?  Note that this will display all defined environments, even ones for which ROMs are missing.
+
+```python
+import retro
+retro.data.list_games()
+```
+
+What initial states are there?
+
+```python
+import retro
+for game in retro.data.list_games():
+    print(game, retro.data.list_states(game))
+```
+
+# Replay files
+
+You can create and view replay files using the UI (Game > Play Movie...).  If you want to manage replay files in a script it looks like this:
+
+## Record
+
+```python
+import retro
+
+env = retro.make(game='AirStriker-Genesis', record='.')
+env.reset()
+while True:
+    _obs, _rew, done, _info = env.step(env.action_space.sample())
+    if done:
+        break
+```
+
+## Playback
+
+```python
+import retro
+
+movie = retro.Movie('AirStriker-Genesis-Level1-000000.bk2')
+movie.step()
+
+env = retro.make(game=movie.get_game(), state=None, use_restricted_actions=retro.Actions.ALL, players=movie.players)
+env.initial_state = movie.get_state()
+env.reset()
+
+while movie.step():
+    keys = []
+    for p in range(movie.players):
+        for i in range(env.num_buttons):
+            keys.append(movie.get_key(i, p))
+    _obs, _rew, _done, _info = env.step(keys)
+```
+
+## Render to Video
+
+This requires ffmpeg to be installed and writes the output to the directory that the input file is located in.
+
+```python
+python -m retro.scripts.playback_movie AirStriker-Genesis-Level1-000000.bk2
+```
+
+# Integration User Interface
+
+The integration UI helps you easily find variables and see what is going on with the reward function.  Binaries for this are not currently available, so you'll have to build this from source, see [Install Retro UI from source](#install-retro-ui-from-source).
+
+# Development
+
+## Install Retro from source
+
+Building Gym Retro requires at least either gcc 5 or clang 3.4.
+
+### Prerequisites
 
 To build Gym Retro you must first install CMake.
 You can do this either through your package manager, download from the [official site](https://cmake.org/download/) or `pip3 install cmake`.
 If you're using the official installer on Windows, make sure to tell CMake to add itself to the system PATH.
+
+### Mac prerequisites
+
+Since LuaJIT does not work properly on macOS you must first install Lua 5.1 from homebrew:
+
+```sh
+brew install pkg-config lua@5.1
+```
 
 ### Windows prerequisites
 
@@ -94,24 +183,13 @@ rm -rf .git/modules
 git submodule update --init
 ```
 
-# Use With Gym
+## Install Retro UI from source
 
-```python
-import retro
-env = retro.make(game='SonicTheHedgehog-Genesis', state='GreenHillZone.Act1')
-```
-
-# Integration User Interface
-
-The integration UI helps you easily find variables and see what is going on with the reward function.
-
-## Install from binary
-
-Binaries will be coming soon
-
-## Install from source
+First make sure you can install Retro from source, after that follow the instructions for your platform:
 
 ### macOS
+
+Note that for Mojave (10.14) you may need to install `/Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg`
 
 ```sh
 brew install pkg-config capnp lua@5.1 qt5
@@ -132,65 +210,6 @@ make -j$(grep -c ^processor /proc/cpuinfo)
 ### Windows
 
 Building from source on Windows is currently difficult to configure. Docker containers for cross-compiling are available at [openai/travis-build](https://hub.docker.com/r/openai/travis-build/).
-
-# Replay files
-
-You can create and view replay files using the UI (Game > Play Movie...).  If you want to manage replay files in a script it looks like this:
-
-## Record
-
-```python
-import retro
-
-env = retro.make(game='SonicTheHedgehog-Genesis', state='GreenHillZone.Act1', record='.')
-env.reset()
-while True:
-    _obs, _rew, done, _info = env.step(env.action_space.sample())
-    if done:
-        break
-```
-
-## Playback
-
-```python
-import retro
-
-movie = retro.Movie('SonicTheHedgehog-Genesis-GreenHillZone.Act1-0000.bk2')
-movie.step()
-
-env = retro.make(game=movie.get_game(), None, use_restricted_actions=retro.ACTIONS_ALL)
-env.initial_state = movie.get_state()
-env.reset()
-
-while movie.step():
-    keys = []
-    for i in range(env.NUM_BUTTONS):
-        keys.append(movie.get_key(i))
-    _obs, _rew, _done, _info = env.step(keys)
-```
-
-## Render to Video
-
-```python
-python scripts/playback_movie.py SonicTheHedgehog-Genesis-GreenHillZone.Act1-0000.bk2
-```
-
-# Environments
-
-What environments are there?
-
-```python
-import retro
-retro.data.list_games()
-```
-
-What initial states are there?
-
-```python
-import retro
-for game in retro.data.list_games():
-    print(game, retro.data.list_states(game))
-```
 
 # Changelog
 

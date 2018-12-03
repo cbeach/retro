@@ -11,6 +11,15 @@
     "time": {
       "address": 1800,
       "type": ">u4"
+    },
+    "hvel": {
+      "address": 189,
+      "type": "|i1"
+    },
+    "vvel": {
+      "address": 207,
+      "type": "|i1"
     }
+
   }
 }

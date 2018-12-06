@@ -12,6 +12,14 @@ function done()
 end
 
 function correct_reward ()
+  if data.xscrollLo == 0 and data.xscrollHi == 0 then
+    previous_pos = 0
+  end
+
+  if data.prev_lives > data.lives then
+    data.prev_lives = data.lives
+  end
+
   local score = data.score * 10
   local pos = data.xscrollLo + data.xscrollHi * 256
   -- print("lua score", score)
@@ -21,16 +29,18 @@ function correct_reward ()
   local delta_lives = 0
   local scaled_delta_score = 0
 
+
   delta_score = score - previous_score
   previous_score = score
-  scaled_delta_score = delta_score / 100
+  scaled_delta_score = delta_score / 10
 
   if pos > previous_pos then
     delta_pos = pos - previous_pos
     previous_pos = pos
   end  
+  -- print('pos', pos, 'previous_pos', previous_pos, 'd_pos', delta_pos, 'xscrollLo', data.xscrollLo, 'xscrollHi', data.xscrollHi)
 
-  delta_lives = (data.lives - data.prev_lives)
+  -- delta_lives = (data.lives - data.prev_lives)
 
-  return delta_pos + scaled_delta_score + delta_lives
+  return delta_pos + scaled_delta_score -- + delta_lives
 end

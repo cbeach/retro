@@ -1,17 +1,11 @@
 {
   "done": {
-    "variables": {
-      "lives": {
-        "op": "equal",
-        "reference": -1
-      }
-    }
+    "script": "lua:done"
   },
   "reward": {
-    "variables": {
-      "xscrollLo": {
-        "reward": 1
-      }
-    }
-  }
+    "script": "lua:correct_reward"
+  },
+  "scripts": [
+    "script.lua"
+  ]
 }

@@ -132,6 +132,7 @@ lib*.a
 retro/cores/*-version
 retro/cores/*.json
 retro/VERSION.txt
+*.sw[mnop]
 
 # Test stuff
 Temporary

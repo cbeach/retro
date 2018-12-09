@@ -4,11 +4,11 @@
       "address": 1886,
       "type": "|u1"
     },
-    "levelHi": {
+    "world": {
       "address": 1887,
       "type": "|i1"
     },
-    "levelLo": {
+    "level": {
       "address": 1884,
       "type": "|i1"
     },

@@ -46,7 +46,7 @@ function correct_reward ()
   end  
   -- print('pos', pos, 'previous_pos', previous_pos, 'd_pos', delta_pos, 'xscrollLo', data.xscrollLo, 'xscrollHi', data.xscrollHi)
 
-  delta_lives = (data.lives - data.prev_lives)
+  --delta_lives = (data.lives - data.prev_lives)
 
-  return delta_pos + scaled_delta_score + delta_lives + delta_time
+  return delta_pos + scaled_delta_score + delta_time
 end

@@ -13,6 +13,7 @@ function done()
 end
 
 function correct_reward ()
+  print('data', data)
   if data.xscrollLo == 0 and data.xscrollHi == 0 then
     previous_pos = 0
   end

@@ -19,7 +19,84 @@
     "vvel": {
       "address": 207,
       "type": "|i1"
-    }
+    },
 
+
+    "level": {
+      "address": 1831,
+      "type": "|i1"
+    },
+    "world": {
+      "address": 1831,
+      "type": "|i1"
+    },
+    "current_form": {
+      "address": 237,
+      "type": ">u4"
+    },
+    "form1": {
+      "address": 1400,
+      "type": ">u4"
+    },
+    "form2": {
+      "address": 1862,
+      "type": ">u4"
+    },
+    "no_item": {
+      "address": 32128,
+      "type": "|i1"
+    },
+    "mushroom": {
+      "address": 32136,
+      "type": "|i1"
+    },
+    "flower": {
+      "address": 32144,
+      "type": "|i1"
+    },
+    "leaf": {
+      "address": 32152,
+      "type": "|i1"
+    },
+    "frog": {
+      "address": 32160,
+      "type": "|i1"
+    },
+    "bear": {
+      "address": 32168,
+      "type": "|i1"
+    },
+    "hammer_bro_suit": {
+      "address": 32176,
+      "type": "|i1"
+    },
+    "cloud": {
+      "address": 32184,
+      "type": "|i1"
+    },
+    "p_wing": {
+      "address": 32192,
+      "type": "|i1"
+    },
+    "star": {
+      "address": 32200,
+      "type": "|i1"
+    },
+    "anchor": {
+      "address": 32208,
+      "type": "|i1"
+    },
+    "hammer": {
+      "address": 32216,
+      "type": "|i1"
+    },
+    "whistle": {
+      "address": 32224,
+      "type": "|i1"
+    },
+    "music_box": {
+      "address": 32232,
+      "type": "|i1"
+    }
   }
 }

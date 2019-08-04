@@ -13,7 +13,6 @@ function done()
 end
 
 function correct_reward ()
-  print('data', data)
   if data.xscrollLo == 0 and data.xscrollHi == 0 then
     previous_pos = 0
   end
@@ -36,7 +35,7 @@ function correct_reward ()
 
   if data.time > previous_time then
     previous_time = data.time
-  elseif data.time < data. then
+  elseif data.time < previous_time then
     previous_time = data.time
     delta_time = previous_time - data.time
   end
